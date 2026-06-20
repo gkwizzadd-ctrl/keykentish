@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Testimonials — Key Kentish</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Instrument+Sans:wght@300;400;500;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Instrument Sans', system-ui, sans-serif;
+      background: #fff; color: #1A2B45;
+      line-height: 1.6; -webkit-font-smoothing: antialiased;
+    }
+    :root {
+      --navy:     #0A1628;
+      --navy-mid: #0D2040;
+      --teal:     #00A894;
+      --white:    #FFFFFF;
+      --off:      #F4F6FA;
+      --muted:    #8A9BB0;
+      --serif:    'Cormorant Garamond', Georgia, serif;
+      --sans:     'Instrument Sans', system-ui, sans-serif;
+      --mono:     'DM Mono', monospace;
+    }
+
+    /* ─── Nav ────────────────────────────────────────────────── */
+    #nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 28px 56px;
+      transition: background .35s, padding .35s, border-color .35s;
+      border-bottom: 1px solid transparent;
+    }
+    #nav.pinned {
+      background: rgba(10,22,40,.97); backdrop-filter: blur(14px);
+      padding: 18px 56px; border-bottom-color: rgba(255,255,255,.07);
+    }
+    .nav-logo {
+      font-family: var(--sans); font-size: 14px; font-weight: 600;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--white); text-decoration: none;
+    }
+    .nav-logo em { font-style: normal; color: var(--teal); }
+    .nav-links { display: flex; gap: 40px; list-style: none; }
+    .nav-links a {
+      font-size: 12px; font-weight: 400; letter-spacing: .08em;
+      text-transform: uppercase; color: rgba(255,255,255,.6);
+      text-decoration: none; transition: color .2s;
+    }
+    .nav-links a:hover { color: #fff; }
+    .nav-links a.active { color: var(--teal); }
+    .nav-cta {
+      font-size: 12px; font-weight: 500; letter-spacing: .05em;
+      text-transform: uppercase; color: var(--navy); background: var(--teal);
+      padding: 11px 26px; text-decoration: none; transition: opacity .2s;
+    }
+    .nav-cta:hover { opacity: .85; }
+
+    /* Hamburger */
+    .hamburger {
+      display: none; flex-direction: column; justify-content: center;
+      align-items: center; gap: 5px; width: 40px; height: 40px;
+      background: none; border: none; cursor: pointer; padding: 4px; z-index: 300;
+    }
+    .hamburger span {
+      display: block; width: 24px; height: 1.5px; background: var(--white);
+      transform-origin: center;
+      transition: transform .35s cubic-bezier(.4,0,.2,1), opacity .25s, width .25s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    /* Mobile overlay */
+    #mob-menu {
+      position: fixed; inset: 0; z-index: 250; background: var(--navy);
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      opacity: 0; transform: translateY(-12px); pointer-events: none;
+      transition: opacity .4s, transform .4s;
+    }
+    #mob-menu.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    body.menu-open { overflow: hidden; }
+    .mob-links { list-style: none; text-align: center; margin-bottom: 52px; }
+    .mob-links li { overflow: hidden; }
+    .mob-links a {
+      display: block; font-family: var(--serif);
+      font-size: clamp(38px, 9vw, 64px); font-weight: 600; font-style: italic;
+      color: rgba(255,255,255,.85); text-decoration: none; padding: 10px 0; line-height: 1.1;
+      transform: translateY(100%);
+      transition: color .2s, transform .45s cubic-bezier(.4,0,.2,1);
+    }
+    #mob-menu.open .mob-links a { transform: translateY(0); }
+    #mob-menu.open .mob-links li:nth-child(1) a { transition-delay: .08s; }
+    #mob-menu.open .mob-links li:nth-child(2) a { transition-delay: .14s; }
+    #mob-menu.open .mob-links li:nth-child(3) a { transition-delay: .20s; }
+    #mob-menu.open .mob-links li:nth-child(4) a { transition-delay: .26s; }
+    .mob-links a:hover { color: var(--teal); }
+    .mob-cta {
+      font-size: 12px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--navy); background: var(--teal); padding: 14px 36px; text-decoration: none;
+      opacity: 0; transform: translateY(10px);
+      transition: background .2s, opacity .4s .3s, transform .4s .3s;
+    }
+    #mob-menu.open .mob-cta { opacity: 1; transform: translateY(0); }
+    .mob-footer {
+      position: absolute; bottom: 32px;
+      font-family: var(--mono); font-size: 10px; letter-spacing: .14em;
+      text-transform: uppercase; color: rgba(255,255,255,.2);
+      opacity: 0; transition: opacity .4s .4s;
+    }
+    #mob-menu.open .mob-footer { opacity: 1; }
+
+    /* ─── Page hero ──────────────────────────────────────────── */
+    #hero {
+      background-color: var(--navy);
+      background-image:
+        radial-gradient(ellipse 55% 80% at 10% 70%, rgba(0,168,148,.10) 0%, transparent 100%),
+        radial-gradient(rgba(255,255,255,.02) 1px, transparent 1px);
+      background-size: 100%, 42px 42px;
+      padding: 160px 56px 100px;
+    }
+    .hero-inner { max-width: 720px; }
+    .eyebrow {
+      font-family: var(--mono); font-size: 11px; font-weight: 400;
+      letter-spacing: .22em; text-transform: uppercase; color: var(--teal);
+      display: flex; align-items: center; gap: 14px; margin-bottom: 28px;
+    }
+    .eyebrow::before {
+      content: ''; display: block; width: 36px; height: 1px;
+      background: var(--teal); flex-shrink: 0;
+    }
+    .hero-h1 {
+      font-family: var(--serif); font-size: clamp(40px, 5.5vw, 72px);
+      font-weight: 600; font-style: italic; line-height: 1.08;
+      color: var(--white); margin-bottom: 24px;
+    }
+    .hero-sub {
+      font-size: 16px; font-weight: 300;
+      color: rgba(255,255,255,.55); max-width: 480px; line-height: 1.75;
+    }
+
+    /* ─── Featured quote ─────────────────────────────────────── */
+    #featured {
+      background: var(--off);
+      padding: 100px 56px;
+    }
+    .featured-inner { max-width: 860px; margin: 0 auto; text-align: center; }
+    .open-quote {
+      font-family: var(--serif); font-size: 100px; line-height: .55;
+      color: var(--teal); opacity: .3; display: block; margin-bottom: 12px;
+      user-select: none;
+    }
+    .featured-quote {
+      font-family: var(--serif); font-size: clamp(20px, 2.8vw, 32px);
+      font-weight: 400; font-style: italic; line-height: 1.5;
+      color: var(--navy); margin-bottom: 40px;
+    }
+    .featured-rule { width: 40px; height: 2px; background: var(--teal); margin: 0 auto 24px; }
+    .featured-name {
+      font-family: var(--sans); font-size: 14px; font-weight: 600;
+      color: var(--navy); letter-spacing: .04em;
+    }
+    .featured-title {
+      font-family: var(--mono); font-size: 11px; font-weight: 300;
+      letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-top: 6px;
+    }
+
+    /* ─── Testimonial grid ───────────────────────────────────── */
+    #testimonials { background: var(--white); padding: 100px 56px; }
+    .sec-eye {
+      font-family: var(--mono); font-size: 10px; font-weight: 400;
+      letter-spacing: .22em; text-transform: uppercase; color: var(--teal); margin-bottom: 16px;
+    }
+    .sec-h2 {
+      font-family: var(--serif); font-size: clamp(30px, 3.5vw, 48px);
+      font-weight: 600; line-height: 1.1; color: var(--navy); margin-bottom: 64px;
+    }
+    .t-grid {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px;
+    }
+    .t-card {
+      background: var(--off); padding: 44px 40px;
+      border-top: 2px solid transparent; transition: border-color .3s;
+    }
+    .t-card:hover { border-top-color: var(--teal); }
+    .t-mark {
+      font-family: var(--serif); font-size: 48px; line-height: .8;
+      color: var(--teal); opacity: .3; margin-bottom: 16px; user-select: none;
+    }
+    .t-quote {
+      font-family: var(--serif); font-size: 18px; font-style: italic;
+      font-weight: 400; line-height: 1.65; color: var(--navy); margin-bottom: 28px;
+    }
+    .t-rule { width: 24px; height: 1.5px; background: var(--teal); margin-bottom: 18px; }
+    .t-name { font-size: 13px; font-weight: 600; color: var(--navy); letter-spacing: .03em; }
+    .t-role {
+      font-family: var(--mono); font-size: 10px; font-weight: 300;
+      letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: 5px;
+    }
+
+    /* ─── CTA band ───────────────────────────────────────────── */
+    #cta { background: var(--navy); padding: 100px 56px; text-align: center; }
+    .cta-h2 {
+      font-family: var(--serif); font-size: clamp(36px, 4.5vw, 62px);
+      font-weight: 600; font-style: italic; color: var(--white); margin-bottom: 18px;
+    }
+    .cta-sub { font-size: 16px; font-weight: 300; color: rgba(255,255,255,.50); margin-bottom: 44px; }
+    .cta-btn {
+      display: inline-block; font-size: 12px; font-weight: 500;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--navy); background: var(--teal);
+      padding: 16px 40px; text-decoration: none; transition: opacity .2s;
+    }
+    .cta-btn:hover { opacity: .85; }
+
+    /* ─── Footer ─────────────────────────────────────────────── */
+    footer {
+      background: var(--navy-mid); padding: 30px 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+    .ft-logo {
+      font-family: var(--sans); font-size: 13px; font-weight: 600;
+      letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.45);
+    }
+    .ft-links { display: flex; gap: 24px; }
+    .ft-links a {
+      font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+      text-transform: uppercase; color: rgba(255,255,255,.28);
+      text-decoration: none; transition: color .2s;
+    }
+    .ft-links a:hover { color: rgba(255,255,255,.6); }
+    .ft-copy {
+      font-family: var(--mono); font-size: 10px; letter-spacing: .08em;
+      color: rgba(255,255,255,.2);
+    }
+
+    /* ─── Reveals ────────────────────────────────────────────── */
+    .r { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+    .r.in { opacity: 1; transform: none; }
+    .d1 { transition-delay: .10s; } .d2 { transition-delay: .20s; }
+    .d3 { transition-delay: .30s; } .d4 { transition-delay: .40s; }
+    .d5 { transition-delay: .50s; } .d6 { transition-delay: .60s; }
+
+    /* ─── Responsive ─────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      #nav { padding: 20px 28px; } #nav.pinned { padding: 14px 28px; }
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+      #hero, #featured, #testimonials, #cta { padding-left: 28px; padding-right: 28px; }
+      footer { padding: 24px 28px; flex-wrap: wrap; gap: 16px; }
+      .t-grid { grid-template-columns: 1fr; }
+      .ft-links { display: none; }
+    }
+    @media (min-width: 901px) and (max-width: 1100px) {
+      .t-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══════════════════════════════════════════════════ -->
+<nav id="nav">
+  <a href="index.html" class="nav-logo">Key <em>Kentish</em></a>
+  <ul class="nav-links">
+    <li><a href="index.html#services">Services</a></li>
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="testimonials.html" class="active">Testimonials</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+  <a href="index.html#contact" class="nav-cta">Get in touch</a>
+  <button class="hamburger" id="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ═══ MOBILE OVERLAY ════════════════════════════════════════ -->
+<div id="mob-menu" role="dialog" aria-modal="true">
+  <ul class="mob-links">
+    <li><a href="index.html#services" class="mob-item">Services</a></li>
+    <li><a href="index.html#about"    class="mob-item">About</a></li>
+    <li><a href="testimonials.html"   class="mob-item">Testimonials</a></li>
+    <li><a href="index.html#contact"  class="mob-item">Contact</a></li>
+  </ul>
+  <a href="index.html#contact" class="mob-cta mob-item">Get in touch</a>
+  <div class="mob-footer">Key Kentish · Telecom Strategy</div>
+</div>
+
+<!-- ═══ HERO ══════════════════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="eyebrow r">What clients &amp; colleagues say</div>
+    <h1 class="hero-h1 r d1">Words from the<br>people I've worked with.</h1>
+    <p class="hero-sub r d2">Recommendations from senior leaders across telecoms operators, BSS/OSS vendors, and global technology businesses — spanning over two decades.</p>
+  </div>
+</section>
+
+<!-- ═══ FEATURED QUOTE ════════════════════════════════════════ -->
+<section id="featured">
+  <div class="featured-inner">
+    <span class="open-quote r">"</span>
+    <blockquote class="featured-quote r d1">
+      Gareth has a canny knack of getting the best out of most situations. He is capable of motivating and rejuvenating businesses and the people that work in them. Gareth possesses great skill in negotiation and is a true believer of the win-win approach. His drive, enthusiasm, integrity and professionalism are second to none. His ability to deal with challenges is very refreshing and pragmatic — a fantastic source of knowledge and advice, and an asset to any organisation.
+    </blockquote>
+    <div class="featured-rule r d2"></div>
+    <div class="featured-name r d2">Suki Dhuphar</div>
+    <div class="featured-title r d3">Enterprise GTM &amp; Customer Success Leader · EMEA &amp; APAC</div>
+  </div>
+</section>
+
+<!-- ═══ TESTIMONIAL GRID ═══════════════════════════════════════ -->
+<section id="testimonials">
+  <div style="max-width:1200px; margin: 0 auto 64px;">
+    <div class="sec-eye r">More recommendations</div>
+    <h2 class="sec-h2 r d1">Trusted across the<br>telecom industry for over 20 years.</h2>
+  </div>
+
+  <div class="t-grid">
+
+    <div class="t-card r">
+      <div class="t-mark">"</div>
+      <p class="t-quote">Gareth is one of the most energetic sales managers I have ever had the pleasure of working with. His passion for selling, coaching and mentoring is second to none, and he generates a huge amount of trust from those who work for him. Not only does Gareth have huge amounts of sales knowledge and best practice, but he leads by example and loves to engage in the sales process.</p>
+      <div class="t-rule"></div>
+      <div class="t-name">Tim Banham</div>
+      <div class="t-role">Sales Transformation Leader</div>
+    </div>
+
+    <div class="t-card r d1">
+      <div class="t-mark">"</div>
+      <p class="t-quote">I have known Gareth for over 20 years and in that time I have seen not only how hard he works but also his passion, his integrity and honesty. His people skills are without question one of his key attributes and he is without doubt the best mentor I have ever had.</p>
+      <div class="t-rule"></div>
+      <div class="t-name">Claire Watson</div>
+      <div class="t-role">Engagement Sales Manager · TM Forum</div>
+    </div>
+
+    <div class="t-card r d2">
+      <div class="t-mark">"</div>
+      <p class="t-quote">Gareth is a highly motivated professional with a flair for strategic planning in the sales arena. His ability to create a natural rapport with clients is exceptional — when coupled with his outstanding knowledge and contacts in the Telco sector, Gareth has all the necessary skills to drive a business forward. His integrity is easily observed and he never fails to recognise the team efforts that have helped him build a highly successful business.</p>
+      <div class="t-rule"></div>
+      <div class="t-name">David Holt</div>
+      <div class="t-role">Chief Executive Officer · Enegen Power Systems</div>
+    </div>
+
+    <div class="t-card r d3">
+      <div class="t-mark">"</div>
+      <p class="t-quote">Gareth doesn't just get sales and the sales process, he lives it. His enthusiasm and passion are infectious and he is constantly striving for improvement in himself and those around him. Gareth is clear, honest and encouraging in all of his communications. The consummate professional and all round good person.</p>
+      <div class="t-rule"></div>
+      <div class="t-name">Carl Richards</div>
+      <div class="t-role">Owner · BSR Associates</div>
+    </div>
+
+    <div class="t-card r d4">
+      <div class="t-mark">"</div>
+      <p class="t-quote">We worked together on a number of high-profile partnerships for Cable &amp; Wireless. Gareth impressed me with his professionalism, knowledge of the market, attention to detail — whilst maintaining a balance of customer focus and a desire to win. He is an excellent leader and an asset to any company.</p>
+      <div class="t-rule"></div>
+      <div class="t-name">Karen Lawson</div>
+      <div class="t-role">CEO, NED &amp; Growth Leader</div>
+    </div>
+
+    <div class="t-card r d5">
+      <div class="t-mark">"</div>
+      <p class="t-quote">Having worked with Gareth for several years, I'd have no hesitation in providing him with my recommendation. Gareth understands the telco and energy areas thoroughly — along with software solutions and technologies — clearly based on years of experience. He also has an extensive network of people in the industry and always brings considerable enthusiasm to every challenge.</p>
+      <div class="t-rule"></div>
+      <div class="t-name">Craig Palmer</div>
+      <div class="t-role">Solutions Architect · Enterprise Systems</div>
+    </div>
+
+    <div class="t-card r">
+      <div class="t-mark">"</div>
+      <p class="t-quote">I have worked closely with Gareth on a number of major bids, and have always found him to be extremely professional and knowledgeable. Gareth knows his subject matter very well, and has excellent communication and presentation skills. Honest, approachable and incredibly popular with his peers — Gareth is a huge asset to his organisation.</p>
+      <div class="t-rule"></div>
+      <div class="t-name">Tariq Rana</div>
+      <div class="t-role">Associate Vice President · CSP &amp; NEP Sales</div>
+    </div>
+
+    <div class="t-card r d1">
+      <div class="t-mark">"</div>
+      <p class="t-quote">His vision, tenacity and sector knowledge equip him with the skills to deliver solutions that the market demands. He is a joy to work with — strong, fun, pragmatic, focused, passionate and above all a really nice guy. Defying the odds, internal resistance and external market dynamics, he built a profitable business and secured its viability for the medium term.</p>
+      <div class="t-rule"></div>
+      <div class="t-name">Frank Pandazopoulos</div>
+      <div class="t-role">Energy Tech &amp; Business Transformation Leader</div>
+    </div>
+
+    <div class="t-card r d2">
+      <div class="t-mark">"</div>
+      <p class="t-quote">Gareth was the boss of Hansen UK, the company that supplied our bespoke Telecom Billing system. He was incredibly supportive and helpful and played a major part in the early success of AdEPT Telecom.</p>
+      <div class="t-rule"></div>
+      <div class="t-name">Ian Fishwick</div>
+      <div class="t-role">Chair · Simply AI · Founder, AdEPT Telecom</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ CTA ════════════════════════════════════════════════════ -->
+<section id="cta">
+  <h2 class="cta-h2 r">Ready to work together?</h2>
+  <p class="cta-sub r d1">Join the leaders who've trusted Key Kentish with their most important decisions.</p>
+  <a href="index.html#contact" class="cta-btn r d2">Start a conversation</a>
+</section>
+
+<!-- ═══ FOOTER ═════════════════════════════════════════════════ -->
+<footer>
+  <div class="ft-logo">Key Kentish</div>
+  <div class="ft-links">
+    <a href="index.html">Home</a>
+    <a href="index.html#services">Services</a>
+    <a href="index.html#about">About</a>
+    <a href="index.html#contact">Contact</a>
+  </div>
+  <div class="ft-copy">© 2026 Key Kentish. Telecom Strategy.</div>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('pinned', window.scrollY > 50);
+  }, { passive: true });
+
+  const hamburger = document.getElementById('hamburger');
+  const mobMenu   = document.getElementById('mob-menu');
+  function openMenu()  { hamburger.classList.add('open'); mobMenu.classList.add('open'); hamburger.setAttribute('aria-expanded','true');  document.body.classList.add('menu-open'); }
+  function closeMenu() { hamburger.classList.remove('open'); mobMenu.classList.remove('open'); hamburger.setAttribute('aria-expanded','false'); document.body.classList.remove('menu-open'); }
+  hamburger.addEventListener('click', () => mobMenu.classList.contains('open') ? closeMenu() : openMenu());
+  mobMenu.querySelectorAll('.mob-item').forEach(l => l.addEventListener('click', closeMenu));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+
+  const els = document.querySelectorAll('.r');
+  const io  = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  els.forEach(el => io.observe(el));
+  setTimeout(() => { document.querySelectorAll('#hero .r').forEach(el => el.classList.add('in')); }, 80);
+</script>
+
+<script src="chat.js"></script>
+</body>
+</html>
