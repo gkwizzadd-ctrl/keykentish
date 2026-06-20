@@ -533,6 +533,115 @@
     .d3 { transition-delay: .30s; }
     .d4 { transition-delay: .40s; }
 
+    /* ─── Demo button ───────────────────────────────────────── */
+    #demo-btn {
+      position: fixed; bottom: 32px; left: 32px; z-index: 9000;
+      display: flex; align-items: center; gap: 11px;
+      background: var(--navy); color: var(--white);
+      border: 1.5px solid rgba(0,168,148,.35);
+      cursor: pointer; padding: 14px 22px 14px 16px;
+      font-family: var(--sans); font-size: 12px;
+      font-weight: 500; letter-spacing: .04em;
+      box-shadow: 0 8px 32px rgba(0,0,0,.4), 0 0 0 0 rgba(0,168,148,0);
+      transition: transform .25s cubic-bezier(.4,0,.2,1),
+                  box-shadow .25s ease,
+                  border-color .25s ease,
+                  opacity .25s ease;
+    }
+    #demo-btn:hover {
+      transform: translateY(-3px);
+      border-color: var(--teal);
+      box-shadow: 0 14px 44px rgba(0,0,0,.45),
+                  0 0 28px rgba(0,168,148,.18);
+    }
+    #demo-btn:active { transform: translateY(-1px); }
+    #demo-btn .demo-icon {
+      width: 32px; height: 32px; flex-shrink: 0;
+      background: var(--teal);
+      display: flex; align-items: center; justify-content: center;
+    }
+    #demo-btn .demo-icon svg { width: 13px; height: 13px; fill: var(--navy); margin-left: 2px; }
+    #demo-btn .demo-label {
+      display: flex; flex-direction: column; gap: 2px; text-align: left;
+    }
+    #demo-btn .demo-label-eye {
+      font-family: var(--mono); font-size: 9px;
+      letter-spacing: .16em; text-transform: uppercase;
+      color: var(--teal); line-height: 1;
+    }
+    #demo-btn .demo-label-text {
+      font-size: 12px; font-weight: 500;
+      color: rgba(255,255,255,.82); letter-spacing: .02em;
+      line-height: 1.3;
+    }
+    #demo-btn.hidden { opacity: 0; pointer-events: none; }
+
+    /* ─── Demo modal ─────────────────────────────────────────── */
+    #demo-modal {
+      position: fixed; inset: 0; z-index: 9200;
+      background: rgba(6,14,28,.92);
+      backdrop-filter: blur(14px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+      opacity: 0; pointer-events: none;
+      transition: opacity .4s ease;
+    }
+    #demo-modal.open {
+      opacity: 1; pointer-events: auto;
+    }
+    #demo-panel {
+      background: var(--navy-mid);
+      border: 1px solid rgba(255,255,255,.09);
+      width: 100%; max-width: 740px;
+      position: relative;
+      box-shadow: 0 48px 120px rgba(0,0,0,.7),
+                  0 0 0 1px rgba(0,168,148,.06);
+      transform: translateY(24px) scale(.97);
+      transition: transform .4s cubic-bezier(.4,0,.2,1);
+    }
+    #demo-modal.open #demo-panel {
+      transform: translateY(0) scale(1);
+    }
+    #demo-video {
+      width: 100%; display: block;
+      aspect-ratio: 16/9; background: #000;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    #demo-caption {
+      padding: 26px 36px 32px;
+    }
+    .demo-caption-eye {
+      font-family: var(--mono); font-size: 10px;
+      letter-spacing: .22em; text-transform: uppercase;
+      color: var(--teal); margin-bottom: 12px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .demo-caption-eye::before {
+      content: ''; display: block;
+      width: 28px; height: 1px; background: var(--teal); flex-shrink: 0;
+    }
+    .demo-caption-text {
+      font-family: var(--serif);
+      font-size: clamp(20px, 2.8vw, 28px);
+      font-weight: 600; font-style: italic;
+      color: var(--white); line-height: 1.25;
+      letter-spacing: -.01em;
+    }
+    #demo-close {
+      position: absolute; top: 16px; right: 18px;
+      background: none; border: none; cursor: pointer;
+      color: rgba(255,255,255,.3); font-size: 28px;
+      font-weight: 300; line-height: 1; padding: 2px 6px;
+      transition: color .2s; z-index: 1;
+    }
+    #demo-close:hover { color: var(--white); }
+
+    @media (max-width: 600px) {
+      #demo-btn { bottom: 16px; left: 16px; max-width: calc(55vw - 24px); }
+      #demo-btn .demo-label-text { font-size: 11px; }
+      #demo-caption { padding: 20px 20px 26px; }
+    }
+
     /* ─── Responsive ─────────────────────────────────────────── */
     @media (max-width: 900px) {
       #nav { padding: 20px 28px; }
@@ -796,6 +905,38 @@
     document.querySelectorAll('#hero .r').forEach(el => el.classList.add('in'));
   }, 80);
 
+  // ── Demo modal ──────────────────────────────────────────────
+  (function () {
+    const demoBtn   = document.getElementById('demo-btn');
+    const demoModal = document.getElementById('demo-modal');
+    const demoClose = document.getElementById('demo-close');
+    const demoVideo = document.getElementById('demo-video');
+
+    function openDemo() {
+      demoModal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      demoVideo.play().catch(() => {});
+    }
+
+    function closeDemo() {
+      demoModal.classList.remove('open');
+      document.body.style.overflow = '';
+      demoVideo.pause();
+      demoVideo.currentTime = 0;
+    }
+
+    demoBtn.addEventListener('click', openDemo);
+    demoClose.addEventListener('click', closeDemo);
+
+    demoModal.addEventListener('click', e => {
+      if (e.target === demoModal) closeDemo();
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && demoModal.classList.contains('open')) closeDemo();
+    });
+  })();
+
   // ── Beams background (ported from BeamsBackground component) ──
   (function () {
     const canvas = document.getElementById('hero-canvas');
@@ -887,6 +1028,31 @@
     animate();
   })();
 </script>
+
+<!-- ═══ DEMO BUTTON ════════════════════════════════════════ -->
+<button id="demo-btn" aria-label="Watch visual demonstration">
+  <span class="demo-icon">
+    <svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0 L10 6 L0 12 Z"/></svg>
+  </span>
+  <span class="demo-label">
+    <span class="demo-label-eye">Visual Demo</span>
+    <span class="demo-label-text">Visually, this is what I can help you with</span>
+  </span>
+</button>
+
+<!-- ═══ DEMO MODAL ══════════════════════════════════════════ -->
+<div id="demo-modal" role="dialog" aria-modal="true" aria-label="Visual demonstration">
+  <div id="demo-panel">
+    <button id="demo-close" aria-label="Close">&times;</button>
+    <video id="demo-video"
+           src="videos/Spaghetti%20to%20lego1.mp4"
+           controls playsinline preload="metadata"></video>
+    <div id="demo-caption">
+      <div class="demo-caption-eye">TM Forum ODA</div>
+      <p class="demo-caption-text">Applying the TM Forum's ODA is like turning spaghetti into Lego</p>
+    </div>
+  </div>
+</div>
 
 <script src="chat.js"></script>
 </body>
