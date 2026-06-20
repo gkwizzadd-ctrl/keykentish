@@ -851,6 +851,31 @@
   <div class="ft-copy">© 2026 Key Kentish. Telecom Strategy.</div>
 </footer>
 
+<!-- ═══ DEMO BUTTON ════════════════════════════════════════════ -->
+<button id="demo-btn" aria-label="Watch visual demonstration">
+  <span class="demo-icon">
+    <svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0 L10 6 L0 12 Z"/></svg>
+  </span>
+  <span class="demo-label">
+    <span class="demo-label-eye">Visual Demo</span>
+    <span class="demo-label-text">Visually, this is what I can help you with</span>
+  </span>
+</button>
+
+<!-- ═══ DEMO MODAL ══════════════════════════════════════════════ -->
+<div id="demo-modal" role="dialog" aria-modal="true" aria-label="Visual demonstration">
+  <div id="demo-panel">
+    <button id="demo-close" aria-label="Close">&times;</button>
+    <video id="demo-video"
+           src="videos/Spaghetti%20to%20lego1.mp4"
+           controls playsinline preload="metadata"></video>
+    <div id="demo-caption">
+      <div class="demo-caption-eye">TM Forum ODA</div>
+      <p class="demo-caption-text">Applying the TM Forum's ODA is like turning spaghetti into Lego</p>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ JS ═════════════════════════════════════════════════════ -->
 <script>
   // Nav pin on scroll
@@ -1028,31 +1053,6 @@
     animate();
   })();
 </script>
-
-<!-- ═══ DEMO BUTTON ════════════════════════════════════════ -->
-<button id="demo-btn" aria-label="Watch visual demonstration">
-  <span class="demo-icon">
-    <svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0 L10 6 L0 12 Z"/></svg>
-  </span>
-  <span class="demo-label">
-    <span class="demo-label-eye">Visual Demo</span>
-    <span class="demo-label-text">Visually, this is what I can help you with</span>
-  </span>
-</button>
-
-<!-- ═══ DEMO MODAL ══════════════════════════════════════════ -->
-<div id="demo-modal" role="dialog" aria-modal="true" aria-label="Visual demonstration">
-  <div id="demo-panel">
-    <button id="demo-close" aria-label="Close">&times;</button>
-    <video id="demo-video"
-           src="videos/Spaghetti%20to%20lego1.mp4"
-           controls playsinline preload="metadata"></video>
-    <div id="demo-caption">
-      <div class="demo-caption-eye">TM Forum ODA</div>
-      <p class="demo-caption-text">Applying the TM Forum's ODA is like turning spaghetti into Lego</p>
-    </div>
-  </div>
-</div>
 
 <script src="chat.js"></script>
 </body>
